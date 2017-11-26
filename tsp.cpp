@@ -169,17 +169,7 @@ int main(int argc, char** argv) {
 	processOutput(outputStream, citiesPtr);
 
 
-	city testCity1;
-	testCity1.id = -100;
-	testCity1.x = 1;
-	testCity1.y = 2;
 
-	city testCity2;
-	testCity2.id = -101;
-	testCity2.x = 988;
-	testCity2.y = 88;
-
-	cout << distance(testCity1, testCity2);
 
 	//end of program
 	return 0;
