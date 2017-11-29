@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
 	char const* inputFile; //c string
 	char const* outputFile; //c string
 
-	//get filename from user in c-string format
+	//get filename from user
 	input_file = getFilename();
 
 	//generate output filename by appending ".tour"
