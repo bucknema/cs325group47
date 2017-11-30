@@ -19,12 +19,13 @@
 
 using namespace std;
 
-//Each city has an id, x-coordinate, and y-coordinate
+//Each city has an id, x-coordinate, and y-coordinate, and a visited value (0 for unvisited, 1 for visited)
 struct city {
 
 	int id;
 	int x;
 	int y;
+	bool visited;
 
 };
 
@@ -72,6 +73,7 @@ void processInput(ifstream& input, vector<city>* cities) {
 		newCity.id = city_id;
 		newCity.x = x_coordinate;
 		newCity.y = y_coordinate;
+		newCity.visited = false;
 
 		cities->push_back(newCity);
 	}
@@ -84,10 +86,11 @@ void processInput(ifstream& input, vector<city>* cities) {
 *inputs: output stream, pointer to a vector of cities
 *outputs: the tour is output to a file appended with ".tour" extension
 */
-void processOutput(ofstream& output, vector<city>* cities) {
+void processOutput(ofstream& output, int tourLength, vector<city>* cities) {
 
+	output << tourLength << endl;
 	for (city c : *cities)
-	output << c.id <<"\t"<< c.x << "\t" << c.y << endl;
+		output << c.id << endl;
 }
 
 
@@ -102,7 +105,7 @@ int distance(city c1, city c2) {
 	double distance;
 
 	//calculate distance between two points using distance formula
-	distance = sqrt( pow((c1.x - c2.x), 2) + pow((c1.y - c2.y), 2) );
+	distance = sqrt(pow((c1.x - c2.x), 2) + pow((c1.y - c2.y), 2));
 
 	//round to nearest integer
 	dist = round(distance);
@@ -124,8 +127,12 @@ int main(int argc, char** argv) {
 	char const* inputFile; //c string
 	char const* outputFile; //c string
 
-	//get filename from user
-	input_file = getFilename();
+	if (argc < 2) {
+		cout << "Enter a filename as a command line arg" << endl;
+		return(1);
+	}
+
+	input_file = argv[1];
 
 	//generate output filename by appending ".tour"
 	output_file = input_file + ".tour";
@@ -140,33 +147,59 @@ int main(int argc, char** argv) {
 
 	vector<city> cities;
 	vector<city>* citiesPtr = &cities;
-	
+
 	//store cities line by line in a vector of city structs
 	processInput(inputStream, citiesPtr);
 
 	/*Next: Build a graph using the cities vector by calculating the distances between all cities*/
 
-	/************************************************************************************/
-	/************************************************************************************/
-	/************************************************************************************/
-	/*ALGORITHM IMPLEMENTATION OF TSP*/
-	/*
-	* Nearest neighbor ? ? ?
-	* Brute force ? ? ?
-	* Dynamic programming ? ? ?
-	* Other ? ? ? 
-	*/
-	/************************************************************************************/
-	/************************************************************************************/
-	/************************************************************************************/
+	/*ALGORITHM IMPLEMENTATION OF TSP Nearest Neighbor algorithm*/	
+	
+	vector<city> visited;
+	vector<city>* visitedPtr = &visited;
+	city start, curr;
+	int n = cities.size();
+	int total = 0; //total distance travelled
+	int minDist, minIdx; //minimum distance to closest unvisited vertex, and index of closest unvisited vertex
 
+	//start at first vertex in vector, record which is first city visited so we can return to it when finished
+	start = cities[0]; 
+	curr = cities[0];
+	cities[0].visited = true;
+	//add current city to visited vector
+	visited.push_back(curr);
+
+	//iterate through vector, where n is the number of cities in the vector
+	for (int i = 1; i < n; i++) {
+		//find closest city
+		minDist = 100000000; //this is intended to be higher than any potential distance between cities
+		for (int j = 0; j < n; j++) {
+			//only checks unvisited cities
+			if (!cities[j].visited) {
+				int d = distance(curr, cities[j]);
+				if (d < minDist) {
+					minDist = d;
+					minIdx = j;
+				}
+			}
+		}
+		//set current city to the closest one
+		cities[minIdx].visited = true;
+		curr = cities[minIdx];
+		//add current to visited vector
+		visited.push_back(curr);
+		//add distance to total
+		total += minDist; 
+			
+	}
 
 	//open output file stream object
 	ofstream outputStream;
 	outputStream.open(outputFile);
 
 	//write solution tour to "...txt.tour" file
-	processOutput(outputStream, citiesPtr);
+	processOutput(outputStream, total, visitedPtr);
+	outputStream.close();
 
 
 
