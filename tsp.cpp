@@ -167,7 +167,7 @@ int main(int argc, char** argv) {
 	int minDist, minIdx; //minimum distance to closest unvisited vertex, and index of closest unvisited vertex
 
 	//start at first vertex in vector, record which is first city visited so we can return to it when finished
-	for(int i = 0; i < n; i++){
+	for(int i = 0; i < min(n, 20); i++){
 		start = cities[i]; 
 		curr = cities[i];
 		cities[i].visited = true;
