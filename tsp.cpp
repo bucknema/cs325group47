@@ -3,9 +3,9 @@
 *
 *
 * tsp.cpp
-* compile with: g++ -std=c++11 tsp.cpp -o tsp
-* run with: tsp
-* the program will prompt you for an input file name at run time
+* Compile with: g++ -std=c++11 tsp.cpp -o tsp
+* To run: place problem instance file in same directory as tsp executable and enter command: tsp [problem instance file name]
+* Solution file will be generated in the same directory as the tsp executable with ".tour" extension when the program finishes
 */
 
 
