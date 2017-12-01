@@ -192,6 +192,8 @@ int main(int argc, char** argv) {
 		total += minDist; 
 			
 	}
+	// add distance back to start
+	total += distance(curr, start);
 
 	//open output file stream object
 	ofstream outputStream;
